@@ -1,0 +1,154 @@
+/* ===== PRODUCTO FORM — Scrapbook Card ===== */
+.form-wrapper {
+  position: relative;
+}
+
+/* Collage decorative shapes behind the card */
+.form-wrapper::before,
+.form-wrapper::after {
+  content: '';
+  position: absolute;
+  border-radius: var(--radius-card);
+  z-index: 0;
+}
+
+.form-wrapper::before {
+  width: 90%;
+  height: 90%;
+  top: 14px;
+  left: -10px;
+  background-color: var(--color-mint);
+  transform: rotate(-2.5deg);
+}
+
+.form-wrapper::after {
+  width: 85%;
+  height: 70%;
+  bottom: -8px;
+  right: -8px;
+  background-color: var(--color-periwinkle);
+  transform: rotate(1.8deg);
+}
+
+/* Card surface */
+.form-card {
+  position: relative;
+  z-index: 1;
+  background-color: var(--color-white);
+  border-radius: var(--radius-card);
+  padding: 32px 28px;
+  box-shadow: var(--shadow-xl);
+}
+
+.form-card__title {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 1.2;
+  letter-spacing: -0.72px;
+  color: var(--color-ink);
+  margin-bottom: 24px;
+}
+
+/* Form layout */
+.form-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Field group */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-ink);
+  letter-spacing: 0.14px;
+}
+
+.form-field input {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  padding: 12px 16px;
+  border: 1.5px solid var(--color-ash);
+  border-radius: var(--radius-input);
+  background-color: var(--color-white);
+  color: var(--color-ink);
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.form-field input::placeholder {
+  color: #bebbba;
+}
+
+.form-field input:focus {
+  border-color: var(--color-ink);
+}
+
+/* Submit button */
+.form-submit {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 12px 32px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-ink);
+  color: var(--color-white);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.form-submit:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.form-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Form actions row */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+/* Cancel button */
+.form-cancel {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 12px 24px;
+  border: 1.5px solid var(--color-ash);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-white);
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.form-cancel:hover {
+  background-color: var(--color-cloud, #efefef);
+  border-color: var(--color-stone, #bebbba);
+}
+
+/* Edit-mode visual cue */
+.form-card--editing {
+  box-shadow: var(--shadow-xl), inset 0 0 0 2px var(--color-marigold);
+}
+
+.form-card--editing .form-card__title {
+  color: var(--color-ink);
+}
+
+.form-card--editing .form-submit {
+  background-color: #2a6e3a;
+}

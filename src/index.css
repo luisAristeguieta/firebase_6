@@ -1,0 +1,56 @@
+/* ===== DESIGN TOKENS (Craft Docs: Digital Scrapbook Collage) ===== */
+:root {
+  /* Colors */
+  --color-canvas: #fff3e7;
+  --color-ink: #030302;
+  --color-white: #ffffff;
+  --color-ash: #e1e1e1;
+  --color-cloud: #efefef;
+  --color-stone: #bebbba;
+  --color-mint: #9bd8a9;
+  --color-marigold: #fde99b;
+  --color-periwinkle: #b8caf5;
+  --color-papaya: #ff4500;
+
+  /* Typography */
+  --font-serif: 'Lora', ui-serif, Georgia, serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  /* Shadows */
+  --shadow-xl: rgba(0, 0, 0, 0.01) 0px 50px 40px 0px,
+    rgba(0, 0, 0, 0.02) 0px 50px 40px 0px,
+    rgba(0, 0, 0, 0.05) 0px 20px 40px 0px,
+    rgba(0, 0, 0, 0.08) 0px 3px 10px 0px;
+
+  /* Radii */
+  --radius-card: 20px;
+  --radius-input: 14px;
+  --radius-pill: 9999px;
+}
+
+/* ===== RESET & BASE ===== */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background-color: var(--color-canvas);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100%;
+}

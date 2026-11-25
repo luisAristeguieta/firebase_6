@@ -1,0 +1,191 @@
+/* ===== PRODUCTO LISTA — Scrapbook Card ===== */
+.lista-card {
+  background-color: var(--color-white);
+  border-radius: var(--radius-card);
+  padding: 32px 28px;
+  box-shadow: var(--shadow-xl);
+}
+
+/* Header row with title + counter badge */
+.lista-card__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.lista-card__title {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 1.2;
+  letter-spacing: -0.72px;
+  color: var(--color-ink);
+}
+
+.lista-card__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-ink);
+  background-color: var(--color-marigold);
+  border-radius: var(--radius-pill);
+}
+
+/* Loading state */
+.lista-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #bebbba;
+  font-size: 15px;
+  padding: 24px 0;
+}
+
+.lista-loading__dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-mint);
+  border-radius: 50%;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* Empty state */
+.lista-empty {
+  text-align: center;
+  padding: 32px 16px;
+  color: #bebbba;
+  font-size: 15px;
+}
+
+/* Table */
+.lista-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.lista-table thead th {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #bebbba;
+  text-align: left;
+  padding: 0 12px 12px;
+  border-bottom: 1.5px solid var(--color-ash);
+}
+
+.lista-table tbody td {
+  font-size: 15px;
+  padding: 14px 12px;
+  border-bottom: 1px solid #f2f2f2;
+  vertical-align: middle;
+}
+
+.lista-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Product name column */
+.lista-table .product-name {
+  font-weight: 500;
+}
+
+/* Price column */
+.lista-table .product-price {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Stock badge */
+.stock-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+}
+
+.stock-badge--available {
+  background-color: #e8f5eb;
+  color: #1b7a30;
+}
+
+.stock-badge--empty {
+  background-color: #ffeae0;
+  color: var(--color-papaya);
+}
+
+.stock-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+/* Product ID badge */
+.product-id {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  color: #bebbba;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.3px;
+  margin-top: 2px;
+}
+
+/* Edit button */
+.acciones-td {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-editar {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border: 1.5px solid var(--color-ash);
+  border-radius: var(--radius-pill);
+  background-color: var(--color-white);
+  color: var(--color-ink);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-editar:hover {
+  background-color: var(--color-marigold);
+  border-color: var(--color-marigold);
+}
+
+/* Delete button */
+.btn-eliminar {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border: 1.5px solid #ffeae0;
+  border-radius: var(--radius-pill);
+  background-color: #fff5f0;
+  color: var(--color-papaya);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-eliminar:hover {
+  background-color: var(--color-papaya);
+  border-color: var(--color-papaya);
+  color: var(--color-white);
+}
