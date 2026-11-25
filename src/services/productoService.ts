@@ -1,4 +1,13 @@
-import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
+import {
+    addDoc,
+    collection,
+    deleteDoc,
+    doc,
+    getDocs,
+    onSnapshot,
+    updateDoc,
+    type Unsubscribe,
+} from "firebase/firestore";
 import { db } from "../firebase";
 
 export interface NuevoProducto {
@@ -41,6 +50,27 @@ export const obtenerProductos = async (): Promise<Producto[]> => {
     })) as Producto[];
 
     return productos;
+};
+
+export const escucharProductos = (
+    onProductos: (productos: Producto[]) => void,
+    onError?: (error: Error) => void
+): Unsubscribe => {
+    return onSnapshot(
+        collection(db, PRODUCTOS_COLLECTION),
+        (querySnapshot) => {
+            const productos = querySnapshot.docs.map((docFirestore) => ({
+                id: docFirestore.id,
+                ...docFirestore.data(),
+            })) as Producto[];
+
+            onProductos(productos);
+        },
+        (error) => {
+            console.error("Error al escuchar productos:", error);
+            onError?.(error);
+        }
+    );
 };
 
 export const actualizarProducto = async (
