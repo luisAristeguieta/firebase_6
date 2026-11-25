@@ -1,15 +1,20 @@
-# 📦 Taller práctico N° 5: Eliminar documentos en Firestore
+# 📦 Taller práctico N° 6: Sincronización en Tiempo Real con Firestore (`onSnapshot`)
 
-> Actividad académica que completa el ciclo CRUD (Create, Read, Update, Delete) en el sistema de inventario de productos implementando la operación **DELETE** sobre **Cloud Firestore**, utilizando `deleteDoc` junto con las operaciones existentes de escritura (`addDoc`), lectura (`getDocs`) y actualización (`updateDoc`) en una aplicación React + TypeScript + Vite.
+## 🎬 Video Entregable
+
+- **Ver video en Google Drive:** [Video Entregable — Sincronización en Tiempo Real](https://drive.google.com/file/d/1sXIDZN8-6BQh9pZaUGnKEjmTa9KS-pHy/view?usp=sharing)
+- **Archivo con el enlace:** [`Entregable/video entregable.txt`](Entregable/video%20entregable.txt)
+
+> Actividad académica que evoluciona el CRUD (Create, Read, Update, Delete) en el sistema de inventario de productos implementando **sincronización en tiempo real** sobre **Cloud Firestore**, utilizando `onSnapshot` en lugar de la lectura puntual con `getDocs`, junto con las operaciones de escritura (`addDoc`), actualización (`updateDoc`) y eliminación (`deleteDoc`) en una aplicación React + TypeScript + Vite.
 
 ## 🎯 Objetivo
 
-Implementar la operación de eliminación de documentos en Firestore manteniendo el flujo unidireccional de datos, el tipado estricto en TypeScript y la sincronización en tiempo real de la interfaz de usuario:
+Implementar la escucha en tiempo real de la colección `productos` en Firestore manteniendo el flujo unidireccional de datos, el tipado estricto en TypeScript y la limpieza automática de suscripciones al desmontar el componente:
 
 - **CREATE:** Capturar datos del formulario y persistirlos como documentos en Firestore con `addDoc`.
-- **READ:** Consultar la colección `productos` al montar el componente y renderizar la lista en la UI con `getDocs`.
+- **READ (Tiempo Real):** Suscribirse a la colección `productos` al montar el componente con `onSnapshot` (`escucharProductos`), actualizando la UI automáticamente ante cualquier cambio y desuscribiéndose al desmontar (`unsubscribe`).
 - **UPDATE:** Precargar datos de un producto existente en el formulario y actualizar el documento en Firestore con `updateDoc`.
-- **DELETE:** Eliminar un documento específico mediante su `id` con `deleteDoc` y removerlo inmediatamente del estado local de la lista.
+- **DELETE:** Eliminar un documento específico mediante su `id` con `deleteDoc`, reflejándose automáticamente en la tabla gracias a `onSnapshot`.
 
 ## 📐 Diagrama de Flujo
 
@@ -23,11 +28,14 @@ Implementar la operación de eliminación de documentos en Firestore manteniendo
 └──────────────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────────────┐
-│                         FLUJO READ                                   │
+│                   FLUJO READ (TIEMPO REAL)                           │
 │                                                                      │
-│  Firestore 🔥  ──► getDocs() ──► obtenerProductos() ──► ProductoLista│
-│  (colección:       (SDK)         (servicio)              (tabla UI)  │
+│  Firestore 🔥  ──► onSnapshot() ──► escucharProductos()              │
+│  (colección:       (listener)       (retorna unsubscribe)            │
 │   "productos")                                                       │
+│        │                                                             │
+│        └──► ProductoLista (useEffect actualiza estado al instante)   │
+│             └──► cleanup: return () => unsubscribe()                 │
 └──────────────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────────────┐
@@ -37,8 +45,8 @@ Implementar la operación de eliminación de documentos en Firestore manteniendo
 │  (selección)       (callback)   (modo edición)   (servicio)          │
 │                                                                      │
 │  actualizarProducto() ──► doc() + updateDoc() ──► Firestore 🔥       │
-│  (servicio)                (SDK)                   (documento        │
-│                                                     actualizado)     │
+│  (servicio)                (SDK)                   (onSnapshot       │
+│                                                     notifica UI)     │
 └──────────────────────────────────────────────────────────────────────┘
 
 ┌──────────────────────────────────────────────────────────────────────┐
@@ -48,38 +56,32 @@ Implementar la operación de eliminación de documentos en Firestore manteniendo
 │  (tabla UI)        (evento click)  (try / catch)                     │
 │                                                                      │
 │  eliminarProducto() ──► doc() + deleteDoc() ──► Firestore 🔥         │
-│  (servicio)               (SDK)                  (documento          │
-│                                                   eliminado)         │
-│                                                                      │
-│  setProductos() ──► .filter(...) ──► UI actualizada al instante      │
+│  (servicio)               (SDK)                  (onSnapshot         │
+│                                                   actualiza tabla)   │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
 ## 📁 Estructura del Proyecto
 
 ```
-taller5-firebase-update/
+taller6-firebase-sincronización/
 ├── Entregable/
-│   ├── Vista console actual.PNG          # Colección en Firestore antes de eliminar
-│   ├── Producto eliminado web.PNG        # UI con producto eliminado de la lista
-│   └── Console Producto Eliminado.PNG    # Colección en Firestore con documento eliminado
+│   └── video entregable.txt              # Enlace al video entregable en Google Drive
 ├── public/
 │   └── image.png                         # Favicon personalizado
 ├── src/
 │   ├── components/
 │   │   ├── ProductoForm.tsx              # Formulario dual CREATE / UPDATE
 │   │   ├── ProductoForm.css
-│   │   ├── ProductoLista.tsx             # Lista con acciones [Editar] y [Eliminar]
+│   │   ├── ProductoLista.tsx             # Lista en tiempo real con onSnapshot y [Editar] / [Eliminar]
 │   │   └── ProductoLista.css
 │   ├── services/
-│   │   └── productoService.ts            # Lógica Firestore (addDoc / getDocs / updateDoc / deleteDoc)
+│   │   └── productoService.ts            # Lógica Firestore (addDoc / onSnapshot / updateDoc / deleteDoc)
 │   ├── firebase.ts                       # Inicialización de Firebase
 │   ├── App.tsx                           # Componente raíz y orquestación
 │   ├── App.css
 │   ├── index.css                         # Tokens de diseño y reset global
 │   └── main.tsx                          # Entry point React
-├── DESIGN.md                             # Sistema de diseño visual (Craft Docs)
-├── roadmap.md                            # Roadmap de implementación por fases
 ├── index.html                            # HTML con Google Fonts y favicon
 ├── package.json
 ├── tsconfig.json
@@ -100,8 +102,8 @@ taller5-firebase-update/
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/luisAristeguieta/firebase_5.git
-cd taller5-firebase-update
+git clone https://github.com/luisAristeguieta/firebase_6.git
+cd firebase_6
 ```
 
 ### 2. Instalar dependencias
@@ -139,13 +141,10 @@ La aplicación estará disponible en `http://localhost:5173`.
 npm run build
 ```
 
-## 📸 Entregables
+## 🎥 Entregables
 
-| Captura | Descripción |
-|---------|-------------|
-| ![Vista console actual](Entregable/Vista%20console%20actual.PNG) | Vista de la colección `productos` en Cloud Firestore antes de realizar la eliminación. |
-| ![Producto eliminado web](Entregable/Producto%20eliminado%20web.PNG) | Interfaz web tras pulsar **Eliminar**, reflejando la remoción inmediata del elemento en la tabla. |
-| ![Console Producto Eliminado](Entregable/Console%20Producto%20Eliminado.PNG) | Consola de Cloud Firestore actualizada, comprobando que el documento fue eliminado definitivamente. |
+- **Video de demostración (Google Drive):** https://drive.google.com/file/d/1sXIDZN8-6BQh9pZaUGnKEjmTa9KS-pHy/view?usp=sharing
+- **Archivo de respaldo:** [`Entregable/video entregable.txt`](Entregable/video%20entregable.txt)
 
 ## 📋 Componentes Principales
 
@@ -155,15 +154,16 @@ Formulario interactivo con **modo dual**:
 - **Modo UPDATE** (`productoSeleccionado !== null`): precarga automática de datos, botón "Actualizar" y opción de "Cancelar", ejecuta `actualizarProducto()`.
 
 ### `ProductoLista`
-Lista interactiva con refresco reactivo:
-- Al montarse (`useEffect`), consulta Firestore con `obtenerProductos()`.
+Lista interactiva sincronizada en tiempo real:
+- Al montarse (`useEffect`), se suscribe a Firestore con `escucharProductos()` y limpia la suscripción al desmontar (`return () => unsubscribe()`).
 - Muestra columnas **Producto** (con ID resumido), **Precio**, **Stock** y **Acciones**.
 - Contiene los botones **Editar** (activa edición en el formulario) y **Eliminar** (ejecuta `handleEliminar(id)`).
-- `handleEliminar` llama a `eliminarProducto(id)`, actualiza el estado local mediante `.filter(...)` para que el cambio sea instantáneo en pantalla y muestra la respectiva notificación.
+- Cualquier cambio (`CREATE`, `UPDATE`, `DELETE` o edición directa desde Firebase Console) se refleja automáticamente en pantalla sin recargar la página.
 
 ### `productoService.ts`
 Módulo de servicio que centraliza la interacción directa con Cloud Firestore:
 - `crearProducto(nombre, precio, stock)` → `addDoc()`
+- `escucharProductos(onProductos, onError?)` → `onSnapshot()` (retorna `Unsubscribe`)
 - `obtenerProductos()` → `getDocs()`
 - `actualizarProducto(id, datos)` → `doc()` + `updateDoc()`
 - `eliminarProducto(id)` → `doc()` + `deleteDoc()`
