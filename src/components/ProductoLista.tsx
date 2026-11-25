@@ -1,36 +1,32 @@
 import { useEffect, useState } from "react";
-import { eliminarProducto, obtenerProductos, type Producto } from "../services/productoService";
+import { eliminarProducto, escucharProductos, type Producto } from "../services/productoService";
 import "./ProductoLista.css";
 
 interface ProductoListaProps {
     onSeleccionarProducto?: (producto: Producto) => void;
-    recargarKey?: number;
 }
 
-export function ProductoLista({ onSeleccionarProducto, recargarKey }: ProductoListaProps) {
+export function ProductoLista({ onSeleccionarProducto }: ProductoListaProps) {
     const [productos, setProductos] = useState<Producto[]>([]);
     const [cargando, setCargando] = useState(true);
 
     useEffect(() => {
-        const cargarProductos = async () => {
-            try {
-                setCargando(true);
-                const lista = await obtenerProductos();
+        const unsubscribe = escucharProductos(
+            (lista) => {
                 setProductos(lista);
-            } catch (error) {
-                console.error("Error al obtener productos:", error);
-            } finally {
+                setCargando(false);
+            },
+            () => {
                 setCargando(false);
             }
-        };
+        );
 
-        cargarProductos();
-    }, [recargarKey]);
+        return () => unsubscribe();
+    }, []);
 
     const handleEliminar = async (id: string) => {
         try {
             await eliminarProducto(id);
-            setProductos((prev) => prev.filter((producto) => producto.id !== id));
             alert("Producto eliminado correctamente.");
         } catch (error) {
             console.error("Error al eliminar producto:", error);

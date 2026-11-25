@@ -6,7 +6,6 @@ import type { Producto } from './services/productoService'
 
 function App() {
   const [productoSeleccionado, setProductoSeleccionado] = useState<Producto | null>(null);
-  const [recargarKey, setRecargarKey] = useState(0);
 
   const seleccionarProducto = (producto: Producto) => {
     setProductoSeleccionado(producto);
@@ -14,7 +13,6 @@ function App() {
 
   const handleProductoGuardado = () => {
     setProductoSeleccionado(null);
-    setRecargarKey((prev) => prev + 1);
   };
 
   const handleCancelarEdicion = () => {
@@ -36,7 +34,6 @@ function App() {
         />
         <ProductoLista
           onSeleccionarProducto={seleccionarProducto}
-          recargarKey={recargarKey}
         />
       </main>
     </div>
